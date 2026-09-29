@@ -70,7 +70,7 @@ npm start
 </br>
 ## General Response Type
 
-Every JSON response follows one of these shapes:
+Every response follows these shapes:
 
 ```js
 {
@@ -79,13 +79,13 @@ message: "success about route" || "failaure about route"
 }
 ```
 
-Auth cookies: **`ref`** (short-lived access token, 15m) and **`pass`** (refresh token, tied to a DB session).
+Auth cookies: **`ref`** (short-lived access token, 15m) and **`pass`** (refresh token, saved in DB session).
 
 ---
 
 # API Routes
 
-Grouped by use case — click a section to expand it.
+Expand to see details.
 
 <br>
 
