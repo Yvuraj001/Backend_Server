@@ -1,0 +1,42 @@
+# AI-GENERATED REVIEW
+
+## TODO — Backend security and authentication
+
+- [ ] **Fix Google OAuth identity verification**
+  - Use Google's verified `sub` claim (`googleUser.sub`) and the stored `googleId` as the primary identifier for returning Google users.
+  - Require a valid verified ID token and `email_verified === true` before creating or authenticating an account.
+  - Check account status (including `isActive`) before issuing authentication cookies.
+  - Do not silently authenticate or link a local account just because its email matches a Google account.
+
+- [ ] **Implement safe Google account linking**
+  - If a Google identity is not found but its email belongs to an existing local account, require the user to authenticate to that existing account before linking Google.
+  - Make account linking an explicit, separately protected flow.
+  - Handle duplicate-key errors and concurrent OAuth callbacks safely.
+
+- [ ] **Enforce Google ID uniqueness in MongoDB**
+  - Add a unique sparse index for `googleId` (after checking existing data for duplicates).
+  - Ensure each Google identity can belong to only one user account.
+
+- [ ] **Strengthen OAuth callback protection**
+  - Validate the OAuth `state` value and clear it after successful validation to prevent reuse.
+  - Add PKCE using the `S256` challenge method.
+  - Keep Google ID-token signature and audience verification enabled.
+
+- [ ] **Harden Express session configuration**
+  - Explicitly configure session cookie `httpOnly`, `secure`, `sameSite`, and `maxAge` settings for the deployment environment.
+  - Replace Express's in-memory session store with a persistent production-ready session store.
+  - Review proxy/trust-proxy configuration when deployed behind a reverse proxy.
+
+- [ ] **Add authentication-specific rate limiting**
+  - Apply appropriate rate limits to signup, signin, password-reset, verification/resend, and OAuth endpoints.
+  - Use limits suited to each endpoint and avoid relying only on the existing health-check limiter.
+
+- [ ] **Review and test authentication flows**
+  - Test local signup/signin, Google signup/signin, account-linking conflicts, deactivated accounts, logout, refresh-token rotation/validation, and logout-all.
+  - Verify that invalid, expired, replayed, or mismatched OAuth callbacks are rejected.
+  - Confirm cookies and sessions behave correctly in production HTTPS and the configured frontend-origin setup.
+
+## Notes
+
+- HTTP security headers (for example, Helmet configuration, CSP, HSTS, and related browser headers) are intentionally excluded from this TODO, as requested.
+- This list records review findings and proposed work; the application code has not been changed as part of creating this file.
